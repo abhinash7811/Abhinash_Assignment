@@ -1,22 +1,34 @@
 import java.util.*;
 
-// Problem 1: Cyclic Substring Maximum Sum
-// Key insight: max sum = sum of values of all DISTINCT characters in S
 public class Problem1 {
+    public static int maxCyclicSum(String s) {
+        int n = s.length();
+        String t = s + s;
+
+        Set<Character> set = new HashSet<>();
+        int left = 0, sum = 0, ans = 0;
+
+        for (int right = 0; right < 2 * n; right++) {
+            char ch = t.charAt(right);
+
+            while (set.contains(ch) || right - left + 1 > n) {
+                char remove = t.charAt(left);
+                set.remove(remove);
+                sum -= (remove - 'a' + 1);
+                left++;
+            }
+
+            set.add(ch);
+            sum += (ch - 'a' + 1);
+            ans = Math.max(ans, sum);
+        }
+
+        return ans;
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        String S = sc.nextLine().trim();
-
-        Set<Character> unique = new HashSet<>();
-        for (char c : S.toCharArray()) {
-            unique.add(c);
-        }
-
-        int maxSum = 0;
-        for (char c : unique) {
-            maxSum += (c - 'a' + 1);
-        }
-
-        System.out.println(maxSum);
+        String s = sc.next();
+        System.out.println(maxCyclicSum(s));
     }
 }
